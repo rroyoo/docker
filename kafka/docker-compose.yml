@@ -1,0 +1,58 @@
+version: '3.4'
+services:
+  kafka:
+    container_name: kafka
+    build: 
+      context: .
+      args: 
+        password: 'Z4hwB9k3'
+        kafka_version: '0.11.0.2'
+        kafka: 'kafka_2.12-0.11.0.2'
+      cache_from:
+        - rroyoo/supervisord:latest
+    depends_on:
+      - zookeeper
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 2G
+        reservations: 
+          cpus: '0.15'
+          memory: 1G
+    extra_hosts:
+      - "kafka.zookeeper.com:172.16.0.2"
+      - "kafka.server.com:172.16.0.3"
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.3
+  zookeeper:
+    container_name: kafka_zookeeper
+    build:
+      context: ../commons/zookeeper
+      args:
+        password: 'Z4hwB9k3'
+        zookeeper_version: '3.4.10'
+      cache_from:
+        - rroyoo/supervisord:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 3G
+        reservations: 
+          cpus: '0.15'
+          memory: 1G
+    extra_hosts:
+      - "kafka.zookeeper.com:172.16.0.2"
+      - "kafka.server.com:172.16.0.3"
+    networks:
+      app_net:
+        ipv4_address: 172.16.0.2
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.0.0/29
