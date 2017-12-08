@@ -24,7 +24,7 @@ services:
       - ${ZOOKEEPER_ETC_HOSTS}
       - ${KAFKA_ETC_HOSTS}
     networks:
-      app_net:
+      network_id:
         ipv4_address: ${KAFKA_IP}
   zookeeper:
     container_name: kafka_zookeeper
@@ -47,12 +47,12 @@ services:
       - ${ZOOKEEPER_ETC_HOSTS}
       - ${KAFKA_ETC_HOSTS}
     networks:
-      app_net:
+      network_id:
         ipv4_address: ${ZOOKEEPER_IP}
 networks:
-  app_net:
+  network_id:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 172.16.0.0/29
+        - subnet: ${NETWORK_SUBNET}
