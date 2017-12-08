@@ -5,11 +5,11 @@ services:
     build: 
       context: .
       args: 
-        password: 'Z4hwB9k3'
-        kafka_version: '0.11.0.2'
-        kafka: 'kafka_2.12-0.11.0.2'
+        password: ${PASSW}
+        kafka_version: ${KAFKA_VERSION}
+        kafka: ${KAFKA}
       cache_from:
-        - rroyoo/supervisord:latest
+        - ${SUPERVISORD_IMAGE}
     depends_on:
       - zookeeper
     deploy:
@@ -21,20 +21,20 @@ services:
           cpus: '0.15'
           memory: 1G
     extra_hosts:
-      - "kafka.zookeeper.com:172.16.0.2"
-      - "kafka.server.com:172.16.0.3"
+      - ${ZOOKEEPER_ETC_HOSTS}
+      - ${KAFKA_ETC_HOSTS}
     networks:
       app_net:
-        ipv4_address: 172.16.0.3
+        ipv4_address: ${KAFKA_IP}
   zookeeper:
     container_name: kafka_zookeeper
     build:
       context: ../commons/zookeeper
       args:
-        password: 'Z4hwB9k3'
-        zookeeper_version: '3.4.10'
+        password: ${PASSW}
+        zookeeper_version: ${ZOOKEEPER_VERSION}
       cache_from:
-        - rroyoo/supervisord:latest
+        - ${SUPERVISORD_IMAGE}
     deploy:
       resources:
         limits:
@@ -44,11 +44,11 @@ services:
           cpus: '0.15'
           memory: 1G
     extra_hosts:
-      - "kafka.zookeeper.com:172.16.0.2"
-      - "kafka.server.com:172.16.0.3"
+      - ${ZOOKEEPER_ETC_HOSTS}
+      - ${KAFKA_ETC_HOSTS}
     networks:
       app_net:
-        ipv4_address: 172.16.0.2
+        ipv4_address: ${ZOOKEEPER_IP}
 networks:
   app_net:
     driver: bridge
