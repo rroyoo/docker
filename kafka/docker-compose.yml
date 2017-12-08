@@ -28,6 +28,8 @@ services:
         ipv4_address: ${KAFKA_IP}
   zookeeper:
     container_name: kafka_zookeeper
+    volumes:
+      - "/var/zookeeper_${CURRENT_TIMESTAMP}:/var/zookeeper"
     build:
       context: ../commons/zookeeper
       args:
